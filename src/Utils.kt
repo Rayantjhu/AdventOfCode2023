@@ -1,21 +1,11 @@
-import java.math.BigInteger
-import java.security.MessageDigest
 import kotlin.io.path.Path
 import kotlin.io.path.readLines
 
-/**
- * Reads lines from the given input txt file.
- */
+/** Reads lines from the given input txt file. */
 fun readInput(name: String) = Path("src/$name.txt").readLines()
 
-/**
- * Converts string to md5 hash.
- */
-fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray()))
-    .toString(16)
-    .padStart(32, '0')
+/** Helper function to print the solution for the first part of the puzzle */
+fun Int.printFirstPart() = println("The solution for the first part is: $this")
 
-/**
- * The cleaner shorthand for printing output.
- */
-fun Any?.println() = println(this)
+/** Helper function to print the solution for the second part of the puzzle */
+fun Int.printSecondPart() = println("The solution for second part is: $this")
