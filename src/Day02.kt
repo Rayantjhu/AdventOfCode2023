@@ -39,7 +39,7 @@ fun main() {
         return result
     }
 
-    val input = readInput("Day02")
+    val input = readInputLines("Day02")
     val maxContents = mapOf(
         "red" to 12,
         "green" to 13,

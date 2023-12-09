@@ -125,7 +125,7 @@ fun main() {
         return result
     }
 
-    val input = readInput("Day03")
+    val input = readInputLines("Day03")
     part1(input).printFirstPart()
     part2(input).printSecondPart()
 }

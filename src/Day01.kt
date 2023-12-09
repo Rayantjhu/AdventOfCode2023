@@ -47,7 +47,7 @@ fun main() {
         }
     }
 
-    val input = readInput("Day01")
+    val input = readInputLines("Day01")
     part1(input).printFirstPart()
 
     val digits = (1..9).associateBy { it.toString() } + mapOf(

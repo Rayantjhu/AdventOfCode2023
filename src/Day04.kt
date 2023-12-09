@@ -26,7 +26,7 @@ fun main() {
         return input.withIndex().sumOf { (index, value) -> findAmountOfCopies(value, input, index, savedCalculations) }
     }
 
-    val input = readInput("Day04")
+    val input = readInputLines("Day04")
     part1(input).printFirstPart()
     part2(input).printSecondPart()
 }
