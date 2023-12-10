@@ -1,4 +1,18 @@
+import Day02.part1
+import Day02.part2
+
 fun main() {
+    val input = readInputLines("Day02")
+    val maxContents = mapOf(
+        "red" to 12,
+        "green" to 13,
+        "blue" to 14
+    )
+    part1(input, maxContents).printFirstPart()
+    part2(input).printSecondPart()
+}
+
+private object Day02 {
     fun part1(input: List<String>, maxContents: Map<String, Int>): Int {
         return input.sumOf { game ->
             val impossibleResults = game
@@ -6,7 +20,7 @@ fun main() {
                 .substringAfter(": ")
                 // Split the string into separate results
                 .split(", ", "; ")
-                // Map each results into the amount and its color
+                // Map each result into the amount and its color
                 .map {
                     val tokens = it.split(' ')
                     tokens.first().toInt() to tokens.last()
@@ -38,13 +52,4 @@ fun main() {
 
         return result
     }
-
-    val input = readInputLines("Day02")
-    val maxContents = mapOf(
-        "red" to 12,
-        "green" to 13,
-        "blue" to 14
-    )
-    part1(input, maxContents).printFirstPart()
-    part2(input).printSecondPart()
 }

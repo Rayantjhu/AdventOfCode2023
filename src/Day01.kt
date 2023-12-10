@@ -1,7 +1,29 @@
+import Day01.part1
+import Day01.part2
+
 fun main() {
+    val input = readInputLines("Day01")
+    val digits = (1..9).associateBy { it.toString() } + mapOf(
+        "one" to 1,
+        "two" to 2,
+        "three" to 3,
+        "four" to 4,
+        "five" to 5,
+        "six" to 6,
+        "seven" to 7,
+        "eight" to 8,
+        "nine" to 9
+    )
+
+    part1(input).printFirstPart()
+    part2(input, digits).printSecondPart()
+}
+
+private object Day01 {
     /*
-        In order to find the first and last digit, two pointers can be used, one starting at the beginning and stopping
-        once it finds the first digit and the other pointer starting from the end and going back until it finds a digit.
+        To find the first and last digit, two pointers can be used.
+        The first pointer starts at the beginning and stops once it finds the first digit.
+        The other pointer starts from the end and goes back until it finds a digit.
 
         If there is only one digit in the line, the pointers will simply point to the same digit.
      */
@@ -47,19 +69,4 @@ fun main() {
         }
     }
 
-    val input = readInputLines("Day01")
-    part1(input).printFirstPart()
-
-    val digits = (1..9).associateBy { it.toString() } + mapOf(
-        "one" to 1,
-        "two" to 2,
-        "three" to 3,
-        "four" to 4,
-        "five" to 5,
-        "six" to 6,
-        "seven" to 7,
-        "eight" to 8,
-        "nine" to 9
-    )
-    part2(input, digits).printSecondPart()
 }

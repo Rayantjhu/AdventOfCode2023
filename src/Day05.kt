@@ -1,9 +1,20 @@
+import Day05.part1
+import Day05.part2
+
 fun main() {
+    val inputLines = readInputLines("Day05")
+    part1(inputLines).printFirstPart()
+
+    val input = readInput("Day05")
+    part2(input).printSecondPart()
+}
+
+private object Day05 {
     /*
-        We have to find the lowest location for our seeds. We can map each seed to its soil number, then map each soil
-        number to each fertilizer number and so on. This way we will end up with only location numbers and find the
-        lowest number, which will be the solution.
-     */
+    We have to find the lowest location for our seeds. We can map each seed to its soil number, then map each soil
+    number to each fertilizer number and so on. This way we will end up with only location numbers and find the
+    lowest number, which will be the solution.
+    */
     fun part1(input: List<String>): Long {
         // We start with the seed numbers
         var currentNumbers = input.first().substringAfter("seeds: ").split(' ').map { it.toLong() }.toTypedArray()
@@ -45,9 +56,9 @@ fun main() {
     /*
         Exactly the same as part1, but the only difference is that there are now a lot more seeds to begin with. One
         problem: the ranges are huge, so there will be millions of numbers in one list, you would need a ton of RAM
-        to make this work (if it even will work). So the same approach brute-force approach will not work. Of course,
-        one could not make a list of all seeds, but just loop through each range of seeds and do to same thing, but this
-        still would take a long time to compute.
+        to make this work (if it even worked). So the same brute-force approach will not work. Of course,
+        one could not make a list of all seeds, but just loop through each range of seeds and do the same thing, but
+        this still would take a long time to compute.
 
         Instead of using all possible seeds, ranges can be used. For each starting range, we find new mapped ranges.
      */
@@ -58,7 +69,7 @@ fun main() {
         var seedRanges = blocks
             // Take the first line
             .first()
-            // Remove the seeds part to only get the string of numbers
+            // Remove the seed part to only get the string of numbers
             .substringAfter("seeds: ")
             // Split the string into a list of numbers
             .split(' ')
@@ -73,7 +84,7 @@ fun main() {
 
         // Get all mapping blocks
         val mappingBlocks = blocks
-            // Drop the seeds part
+            // Drop the seed part
             .drop(1)
             // For each mapping create a triple for each of its lines
             .map { mapping ->
@@ -108,9 +119,9 @@ fun main() {
                         // Calculate the destination start and end and add it to the new ranges
                         newRanges.add(overlapStart - sourceStart + destinationStart..overlapEnd - sourceStart + destinationStart)
 
-                        // Left part of the seedRange is not looked at, so re-add that part to the seedRanges
+                        // The left part of the seedRange is not looked at, so re-add that part to the seedRanges
                         if (overlapStart > seedRange.first) seedRanges.add(seedRange.first..<overlapStart)
-                        // Right part of the seedRange is not looked at, so re-add that part to the seedRanges
+                        // The right part of the seedRange is not looked at, so re-add that part to the seedRanges
                         if (seedRange.last > overlapEnd) seedRanges.add(overlapEnd + 1..seedRange.last)
 
                         // An overlap has been found, no need to look further for the current range of seeds
@@ -130,10 +141,4 @@ fun main() {
         // Find the lowest location number and return it
         return seedRanges.minOf { it.first }
     }
-
-    val inputLines = readInputLines("Day05")
-    part1(inputLines).printFirstPart()
-
-    val input = readInput("Day05")
-    part2(input).printSecondPart()
 }

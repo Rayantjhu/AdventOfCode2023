@@ -1,10 +1,19 @@
+import Day03.part1
+import Day03.part2
+
 fun main() {
+    val input = readInputLines("Day03")
+    part1(input).printFirstPart()
+    part2(input).printSecondPart()
+}
+
+private object Day03 {
     /*
-        Each symbol adjacent to a number (also diagonally) is a number needed for the solution. Instead of looking for
-        each number, we can look for each symbol (not a dot nor digit) and then find all adjacent numbers. The only
-        problem with this: if a number would be adjacent to more than 1 symbol, that number would be counted twice, in
-        order to combat this, each number should be found instead and check if it has any adjacent symbols.
-     */
+    Each symbol adjacent to a number (also diagonally) is a number needed for the solution. Instead of looking for
+    each number, we can look for each symbol (not a dot nor digit) and then find all adjacent numbers. The only
+    problem with this: if a number was adjacent to more than 1 symbol, that number would be counted twice, to
+    combat this, each number should be found instead and check if it has any adjacent symbols.
+ */
     fun part1(input: List<String>): Int {
         var result = 0
 
@@ -14,9 +23,9 @@ fun main() {
             var endIndex: Int? = null
 
             for (j in line.indices) {
-                // If current character is a digit and previous was not, set the starting index of this number
+                // If the current character is a digit and previous was not, set the starting index of this number
                 if (line[j].isDigit() && line.getOrNull(j - 1)?.isDigit() != true) startIndex = j
-                // If current character is a digit and next is not, set the ending index of this number
+                // If the current character is a digit and next is not, set the ending index of this number
                 if (line[j].isDigit() && line.getOrNull(j + 1)?.isDigit() != true) endIndex = j
 
                 // A number has been found, looking for any adjacent symbols
@@ -117,7 +126,7 @@ fun main() {
                     // Remove all duplicates with the same range (indices) on the same line
                     .distinctBy { it.second }
 
-                // Only add to the result when there's exactly 2 numbers
+                // Only add to the result when there are exactly 2 numbers
                 if (numbers.size == 2) result += numbers.fold(1) { acc, pair -> acc * pair.first }
             }
         }
@@ -125,10 +134,6 @@ fun main() {
         return result
     }
 
-    val input = readInputLines("Day03")
-    part1(input).printFirstPart()
-    part2(input).printSecondPart()
+    /** Helper function to determine whether a character is a digit or a dot. */
+    fun Char.isDigitOrDot(): Boolean = this.isDigit() || this == '.'
 }
-
-/** Helper function to determine whether a character is a digit or a dot. */
-fun Char.isDigitOrDot(): Boolean = this.isDigit() || this == '.'
