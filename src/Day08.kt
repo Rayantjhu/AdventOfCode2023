@@ -4,26 +4,6 @@ import Day08.part2
 fun main() {
     val input = readInputLines("Day08")
 
-    val test = """
-        LLR
-
-        AAA = (BBB, BBB)
-        BBB = (AAA, ZZZ)
-        ZZZ = (ZZZ, ZZZ)
-    """.trimIndent().split('\n')
-
-    val test2 = """
-        RL
-
-        AAA = (BBB, CCC)
-        BBB = (DDD, EEE)
-        CCC = (ZZZ, GGG)
-        DDD = (DDD, DDD)
-        EEE = (EEE, EEE)
-        GGG = (GGG, GGG)
-        ZZZ = (ZZZ, ZZZ)
-    """.trimIndent().split('\n')
-
     part1(input).printFirstPart()
     part2(input).printSecondPart()
 }
@@ -67,7 +47,43 @@ private object Day08 {
         return steps
     }
 
-    fun part2(input: List<String>): Int {
-        return 0
+    /*
+        Doing the same as part1 but for more elements at the same time will probably take millions of steps. Each of the
+        starting elements its steps can be calculated independently. Eventually, there will be a list of steps for each
+        of the starting elements until they reach an element ending in Z.
+
+        Using the Least Common Multiple (LCM), the solution can be found.
+     */
+    fun part2(input: List<String>): Long {
+        val directions = input.first().toCharArray()
+
+        val elements = input
+            .drop(2)
+            .associate {
+                val tokens = it.split(" = ")
+                val next = tokens.last().substring(1..<tokens.last().lastIndex).split(", ")
+
+                tokens.first() to Pair(next.first(), next.last())
+            }
+
+        val allSteps = elements.keys.filter { it.endsWith('A') }.map { startingElement ->
+            var currentElement = startingElement
+            var steps = 0L
+            while (!currentElement.endsWith('Z')) {
+                currentElement = elements[currentElement]?.let {
+                    if (directions[(steps % directions.size).toInt()] == 'L') it.first else it.second
+                } ?: return 0
+                steps++
+            }
+            steps
+        }
+
+        return lcm(allSteps)
     }
+
+    private fun gcd(a: Long, b: Long): Long = if (b == 0L) a else gcd(b, a % b)
+
+    private fun lcm(a: Long, b: Long) = a * b / gcd(a, b)
+
+    private fun lcm(numbers: List<Long>): Long = numbers.reduce { acc, i -> lcm(acc, i) }
 }
