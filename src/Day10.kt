@@ -8,7 +8,7 @@ fun main() {
     part2(input).printSecondPart()
 }
 
-object Day10 {
+private object Day10 {
     /*
         We have to find the farthest point from the starting point. This can be done by traversing the whole loop and
         then dividing the steps by 2, this gives the solution.
