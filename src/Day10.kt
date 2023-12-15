@@ -4,22 +4,6 @@ import Day10.part2
 fun main() {
     val input = readInputLines("Day10")
 
-    val testOne = """
-        -L|F7
-        7S-7|
-        L|7||
-        -L-J|
-        L|-JF
-    """.trimIndent().split('\n')
-
-    val testTwo = """
-        7-F7-
-        .FJ|7
-        SJLL7
-        |F--J
-        LJ.LJ
-    """.trimIndent().split('\n')
-
     part1(input).printFirstPart()
     part2(input).printSecondPart()
 }
@@ -95,7 +79,77 @@ object Day10 {
         else Pair(0, 0)
     }
 
+    /*
+        For the second part, we do not have to keep track of the steps taken, instead this time we need to know of which
+        tiles the loop consists of. This way we can use ray casting
+        (see: https://en.wikipedia.org/wiki/Point_in_polygon#Ray_casting_algorithm) for each dot of each row and check
+        if it is in the loop, if it is, increment a counter.
+     */
     fun part2(input: List<String>): Int {
-        return 0
+        val startLineIndex = input.indexOfFirst { it.contains('S') }
+        val startTileIndex = input[startLineIndex].indexOfFirst { it == 'S' }
+
+        val visitedTiles = mutableListOf(
+            Pair(startLineIndex, startTileIndex),
+            findNextTile(input, startLineIndex, startTileIndex, Pair(-1, -1))
+        )
+
+        while (visitedTiles.last() != visitedTiles.first()) {
+            val currentTile = visitedTiles.last()
+            val previousTile = visitedTiles[visitedTiles.lastIndex - 1]
+            visitedTiles.add(findNextTile(input, currentTile.first, currentTile.second, previousTile))
+        }
+
+        // Find the correct pipe for the starting pipe S
+        val correctStartPipe = correctStartPipe(
+            listOf(visitedTiles[1], visitedTiles[visitedTiles.lastIndex - 1]),
+            visitedTiles.first()
+        )
+
+        // Only these are crossing pipes, include the start pipe as a symbol if it is one of the crossing pipes.
+        // We do not select '-' as a pipe, for example, because this does not count as a cross, rather we are still on
+        // the same line.
+        val crossingPipes =
+            if (correctStartPipe in listOf('|', 'L', 'J')) listOf('|', 'L', 'J', 'S') else listOf('|', 'L', 'J')
+
+        var count = 0
+        input.forEachIndexed { lineIndex, line ->
+            var crossings = 0
+            line.indices.forEach { tileIndex ->
+                if (visitedTiles.contains(Pair(lineIndex, tileIndex))) {
+                    // If the current tile is part of the loop, and it is an edge pipe, increment the crossings
+                    if (input[lineIndex][tileIndex] in crossingPipes) crossings++
+                }
+                // If the current tile is not part of the loop and the number of crossings is odd, it means this tile is
+                // inside the loop
+                else if (crossings % 2 == 1) count++
+            }
+        }
+
+        return count
+    }
+
+    private fun correctStartPipe(
+        connectingPipes: List<Pair<Int, Int>>,
+        startPipe: Pair<Int, Int>
+    ): Char {
+        val first = connectingPipes.first()
+        val second = connectingPipes.last()
+
+        val firstDirections = getDirections(startPipe, first)
+        val secondDirections = getDirections(startPipe, second)
+
+        return firstDirections.intersect(secondDirections.toSet()).first()
+    }
+
+    private fun getDirections(start: Pair<Int, Int>, end: Pair<Int, Int>): List<Char> {
+        // End is north
+        return if (end.first - 1 == start.first) listOf('|', 'J', 'L')
+        // End is south
+        else if (end.first + 1 == start.first) listOf('|', 'F', '7')
+        // End is east
+        else if (end.second + 1 == start.second) listOf('-', 'F', 'L')
+        // End is west
+        else listOf('-', '7', 'J')
     }
 }
