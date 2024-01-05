@@ -23,4 +23,3 @@ data class Quintuple<out T1, out T2, out T3, out T4, out T5>(
     val fifth: T5
 )
 fun <A, B> A.then(other: (A) -> B): B { return other(this) }
-
