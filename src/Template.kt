@@ -2,7 +2,7 @@ import Template.part1
 import Template.part2
 
 fun main() {
-    val input = readInputLines("")
+    val input = readInputLines("Template")
     part1(input).printFirstPart()
     part2(input).printSecondPart()
 }
